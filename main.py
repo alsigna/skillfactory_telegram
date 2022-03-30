@@ -1,3 +1,4 @@
+import logging
 import os
 
 import telebot
@@ -9,8 +10,13 @@ from utils import exchange_inputs, get_available_currencies, get_help, validate_
 bot = telebot.TeleBot(os.environ.get("TOKEN"))
 
 
+logger = telebot.logger
+telebot.logger.setLevel(logging.INFO)  # Outputs debug messages to console.
+
+
 @bot.message_handler(commands=["start", "help"])
 def send_help(message: telebot.types.Message):
+    logger.info(f"{message.from_user.username}: {message.text}")
     buttons = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn_help = telebot.types.KeyboardButton(BUTTON_CMDS["help"])
     btn_currencies = telebot.types.KeyboardButton(BUTTON_CMDS["currencies"])
@@ -22,12 +28,14 @@ def send_help(message: telebot.types.Message):
 
 @bot.message_handler(commands=["currencies"])
 def send_currency(message: telebot.types.Message):
+    logger.info(f"{message.from_user.username}: {message.text}")
     available_currencies = get_available_currencies()
     bot.reply_to(message, available_currencies, parse_mode="markdown")
 
 
 @bot.message_handler(content_types=["text"])
 def main(message: telebot.types.Message):
+    logger.info(f"{message.from_user.username}: {message.text}")
     if message.text == BUTTON_CMDS["help"]:
         reply_msg = get_help()
     elif message.text == BUTTON_CMDS["currencies"]:
@@ -38,7 +46,7 @@ def main(message: telebot.types.Message):
         except ExchangeException as exc:
             reply_msg = f"😢 ошибка\n{str(exc)}"
         except Exception as exc:
-            reply_msg = f"😢 неисзвестная ошибка\n{str(exc)}"
+            reply_msg = f"😢 неизвестная ошибка\n{str(exc)}"
         else:
             reply_msg = exchange_inputs(*parsed_inputs)
 
