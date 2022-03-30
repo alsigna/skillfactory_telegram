@@ -1,5 +1,3 @@
-print("start")
-
 import os
 
 import telebot
@@ -8,7 +6,7 @@ from config import BUTTON_CMDS
 from extensions import ExchangeException
 from utils import exchange_inputs, get_available_currencies, get_help, validate_input_data
 
-bot = telebot.TeleBot(os.environ.setdefault("TOKEN"))
+bot = telebot.TeleBot(os.environ.get("TOKEN"))
 
 
 @bot.message_handler(commands=["start", "help"])
