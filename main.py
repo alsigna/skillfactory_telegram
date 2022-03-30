@@ -1,3 +1,5 @@
+print("start")
+
 import os
 
 import telebot
