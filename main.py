@@ -11,7 +11,7 @@ bot = telebot.TeleBot(os.environ.get("TOKEN"))
 
 
 logger = telebot.logger
-telebot.logger.setLevel(logging.INFO)  # Outputs debug messages to console.
+telebot.logger.setLevel(logging.INFO)
 
 
 @bot.message_handler(commands=["start", "help"])
